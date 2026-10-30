@@ -8,27 +8,27 @@ vex::controller Controller;
 Chassis chassis(
     // Left drivetrain motors (left/right is looking from behind the robot)
     mik::motor_group({
-        mik::motor(PORT20, true, green_18_1, "left front motor"), // For holonomic drivetrains, you must include "front" and "back" for the motor names
-        mik::motor(PORT19, true, blue_6_1, "left middle motor"),
-        mik::motor(PORT18, true, blue_6_1, "left back motor"),
+        mik::motor(PORT2, true, blue_6_1, "left front motor"), // For holonomic drivetrains, you must include "front" and "back" for the motor names
+        mik::motor(PORT5, true, blue_6_1, "left middle motor"),
+        mik::motor(PORT9, true, green_18_1, "left back motor"),
     }),
     // Right drivetrain motors
     mik::motor_group({
-        mik::motor(PORT11, false, green_18_1, "right front motor"),
-        mik::motor(PORT12, false, blue_6_1, "right middle motor"),
-        mik::motor(PORT13, false, blue_6_1, "right back motor"),
+        mik::motor(PORT18, false, blue_6_1, "right front motor"),
+        mik::motor(PORT17, false, blue_6_1, "right middle motor"),
+        mik::motor(PORT20, false, green_18_1, "right back motor"),
     }),
 	
-    PORT8,  // Inertial sensor port
-    353.6,    // Inertial scale (rotation reading after a full 360° turn)
+    PORT15,  // Inertial sensor port
+    353.7,    // Inertial scale (rotation reading after a full 360° turn)
 	false,  // Forces inertial sensor to recalibrate until it is within minimum threshold of 0.05 deg for 1 second
 	
     2.75,   // Drivetrain wheel diameter (in). Negative flips direction.
     450,    // Drivetrain RPM. Cartridge * gear ratio, (Ex: 600 * (36/48) = 450).
 
-    PORT16,  // Forward tracker port. PORT0 if unused. Accepts "PORT_A"
-    -2,      // Forward tracker wheel diameter (in). Negative flips direction. Pushing robot forward at 0° should increase Y
-    1.28,      // Forward tracker center distance (in). Positive = right of center, negative = left.
+    PORT1,  // Forward tracker port. PORT0 if unused. Accepts "PORT_A"
+    2,      // Forward tracker wheel diameter (in). Negative flips direction. Pushing robot forward at 0° should increase Y
+    -0.5625,      // Forward tracker center distance (in). Positive = right of center, negative = left.
 
     PORT0,  // Sideways tracker port. PORT0 if unused. Accepts "PORT_A"
     -2,     // Sideways tracker wheel diameter (in). Negative flips direction. Pushing robot right at 0° should increase X
@@ -37,12 +37,12 @@ Chassis chassis(
     // Distance sensors mounted on a face of the robot
     mik::distance_reset({
         mik::distance(
-			PORT8,		   // Distance sensor port
+			PORT0,		   // Distance sensor port
             rear_sensor,   // "front_sensor", "rear_sensor", "left_sensor", "right_sensor"
             4,             // X offset from tracking center (in). Positive = right of center, negative = left. 
             6              // Y offset from tracking center (in). Positive = in front of center, negative = behind.
         ),
-        mik::distance(PORT3, left_sensor, -6, 4),
+        mik::distance(PORT0, left_sensor, -6, 4),
     })
 );
 
@@ -50,34 +50,29 @@ Chassis chassis(
 
 /* Creating a motor group in assembly */
 mik::motor_group Assembly::cascade_motors({
-	mik::motor(PORT17, true, blue_6_1, "bottom_intake"),
-	mik::motor(PORT14, false, blue_6_1, "middle_intake")
+	mik::motor(PORT8, false, green_18_1, "right_lift"),
+	mik::motor(PORT13, true,green_18_1, "left_lift"),
 });
 
 /* Creating upper intake motor in assembly */
-mik::motor Assembly::two_bar_motor(PORT7, false, red_36_1, "upper_intake");
+mik::motor Assembly::toggle_motor(PORT19, false, green_18_1, "toggle_motor");
 
 /* Creating pistons in assembly */
-mik::piston Assembly::claw_piston(PORT_C);
+mik::piston Assembly::pto_piston(PORT_F);
+mik::motor Assembly::claw_motor(PORT10, false, green_18_1, "claw_motor");
+
 
 /* Creating alternative vex devices in assembly */
-vex::rotation Assembly::rotation_sensor(PORT0);
-vex::optical Assembly::optical_sensor(PORT0);
-vex::distance Assembly::distanceclaw(PORT1);
+vex::rotation Assembly::lift_rotation(PORT16, false);
+vex::optical Assembly::optical_sensor(PORT3);
+vex::distance Assembly::distanceclaw(PORT11);
 
 vex::task Assembly::claw_macro_task;
-
-/* Lift sensors. Set these to the ports they are actually plugged into */
-vex::rotation Assembly::lift_rotation(PORT10, false);
-vex::bumper Assembly::lift_bottom_left(to_triport(PORT_D));
-vex::bumper Assembly::lift_bottom_right(to_triport(PORT_E));
-
-/* Lift task, see assembly.cpp */
+vex::task Assembly::optical_task;
 bool Assembly::claw_macro_grabbed = false;
+bool Assembly::color_stop_on = false;
 
-/* 5 stage lift state, see assembly.cpp */
-vex::task Assembly::lift_macro_task;
-int Assembly::lift_stage = 0;
+
 
 
 // mikLib initialization below, you do not need to edit

@@ -13,30 +13,35 @@ class Assembly {
 public:
 /* Create your devices here */
     static mik::motor_group cascade_motors;
-    static mik::motor two_bar_motor;
-    static mik::piston claw_piston;
+    static mik::motor toggle_motor;
+    static mik::piston pto_piston;
+    static mik::motor claw_motor;
     static vex::distance distanceclaw;
-    static vex::rotation lift_rotation;
-    static vex::bumper lift_bottom_left;
-    static vex::bumper lift_bottom_right;
 /* Examples of other vex devices you may need */
-    static vex::rotation rotation_sensor;
+    static vex::rotation lift_rotation;
     static vex::optical optical_sensor;
     static vex::limit limit_switch;
     
     void init();
     void control();
 
-    void two_bar_control();
-    void claw_piston_control();
+    void lift_control();
     void lift_to_stage(int stage, int timeout_ms = 2000);
+    void score_macro(double drop_deg = 60, int timeout_ms = 800);
+    void claw_control();
+    void claw_spin(double volts, int ms);
+    void toggle_motor_control();
 
-    
+    static bool color_stop_on;            // true = toggle_motor spins until it sees our color
+    static bool sees_alliance_color();    // true when the sensor sees the color picked in the selector
+    void spin_until_color(int timeout_ms = 1500);
+    static vex::task optical_task;        // public so main.cpp can start it
+    static int optical_loop();
+   
 private:
     static vex::task claw_macro_task;
     static bool claw_macro_grabbed;
-    static vex::task lift_macro_task;
     static int claw_macro_loop();
-    static int lift_stage;
-    static int lift_macro_loop();
+
+    
 };

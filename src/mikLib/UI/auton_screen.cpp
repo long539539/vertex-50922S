@@ -73,6 +73,7 @@ void UI_auton_screen::start_auton_test() {
         Controller.Screen.setCursor(1, 1);
         Controller.Screen.print("Auton in progess... ");
         auton_scr->auto_start_time = Brain.Timer.time(vex::timeUnits::msec);
+        auton_scr->queue_autons(true, false);
         auton_scr->queue_autons(false, false);
 
         auton_scr->auto_running = false;

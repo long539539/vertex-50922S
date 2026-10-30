@@ -304,8 +304,8 @@ static float curve(float input, float deadband, float min_output, float curve_ga
 void Chassis::split_arcade_curved() {
     float throttle = vex::controller(vex::primary).Axis3.value();
     float turn = vex::controller(vex::primary).Axis1.value();
-    throttle = std::round(curve(throttle, constants.control_throttle_deadband, constants.control_throttle_min_output, constants.control_throttle_curve_gain));
-    turn = std::round(curve(turn, constants.control_turn_deadband, constants.control_turn_min_output, constants.control_turn_curve_gain));
+    throttle = std::round(curve(throttle, constants.control_throttle_deadband, constants.control_throttle_min_output, constants.control_throttle_curve_gain) * 0.6);
+    turn = std::round(curve(turn, constants.control_turn_deadband, constants.control_turn_min_output, constants.control_turn_curve_gain) * 0.6);
     if (std::fabs(throttle) + std::fabs(turn) > 100) {
         float raw_turn = turn;
         float raw_throttle = throttle;
@@ -318,7 +318,7 @@ void Chassis::split_arcade_curved() {
 
 void Chassis::split_arcade() {
     float throttle = deadband(vex::controller(vex::primary).Axis3.value(), constants.control_throttle_deadband);
-    float turn = deadband(vex::controller(vex::primary).Axis1.value(), constants.control_turn_deadband);
+    float turn = deadband(vex::controller(vex::primary).Axis1.value(), constants.control_turn_deadband)*0.8;
     left_drive.spin(vex::fwd, percent_to_volt(throttle + turn), volt);
     right_drive.spin(vex::fwd, percent_to_volt(throttle - turn), volt);
 }

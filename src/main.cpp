@@ -15,24 +15,23 @@ void pre_auton() {
         // Running the auton selector on the controller disables user control,
         // press X on the controller to close auton selector and enable user control
         .enable_controller_selector = true,
-
+        
         // Warns disconnected motors and chassis devices. 
         // Displayed on `Error Data` on Config Tab
         .check_disconnected_devices = true
+        
     });
 
     default_constants();
-
-    // The lift has no bottom switch, so wherever it is right now is its zero.
-    // Always start the program with the lift all the way down
-    assembly.lift_rotation.resetPosition();
-
+    assembly.lift_rotation.resetPosition();  // lift must be all the way down at program start
+    assembly.optical_task = vex::task(Assembly::optical_loop);  // runs through auton and driver
     UI = task(run_UI);
 }
 
 void auton(void) {
     UI.stop();
     auton_scr->start_auton();
+    
 }
 
 void user_control(void) {
