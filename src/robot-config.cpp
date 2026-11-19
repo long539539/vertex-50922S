@@ -43,6 +43,8 @@ Chassis chassis(
             6              // Y offset from tracking center (in). Positive = in front of center, negative = behind.
         ),
         mik::distance(PORT0, left_sensor, -6, 4),
+		mik::distance(PORT0, right_sensor, 6, 0),
+
     })
 );
 
@@ -80,6 +82,8 @@ bool Assembly::color_stop_on = false;
 Assembly assembly;
 Constants constants;
 vex::competition Competition;
+bool keep_vexos_timer = false;
+
 
 static void loading_screen(bool stop) {
 	static vex::task loading_bar;
@@ -103,13 +107,13 @@ static void loading_screen(bool stop) {
 		int count = 0;
 		while(1) {
 #ifdef FAST_COMPILE
-			Brain.Screen.setFont(vex::fontType::mono40);
-			Brain.Screen.setPenColor("#999999");
-			Brain.Screen.printAt(160, 135, "mik");
-
 			Brain.Screen.setFont(vex::fontType::mono60);
-			Brain.Screen.setPenColor("#FFFFFF");
-			Brain.Screen.printAt(227, 135, "Lib");
+			Brain.Screen.setPenColor("#F8E5DC");
+			Brain.Screen.printAt(150, 140, "VERTEX");
+
+			Brain.Screen.setFont(vex::fontType::mono30);
+			Brain.Screen.setPenColor("#F8E5DC");
+			Brain.Screen.printAt(195, 185, "50922S");
 #endif
 			Brain.Screen.setFont(vex::fontType::mono20);
 			Brain.Screen.printAt(184, 220, calibrate.c_str());
@@ -129,7 +133,7 @@ static void loading_screen(bool stop) {
 static void handle_disconnected_devices() {
 #ifndef FAST_COMPILE
 	int errors = run_diagnostic();
-	if (errors > 0) {
+	if (errors > 0 && !keep_vexos_timer) {
 		Controller.rumble(".");
 		Controller.Screen.setCursor(1, 1);
 		Controller.Screen.print((to_string(errors) + " ERRORS DETECTED").c_str());

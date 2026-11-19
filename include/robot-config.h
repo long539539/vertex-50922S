@@ -12,6 +12,9 @@ extern vex::brain Brain;
 extern vex::controller Controller;
 extern vex::competition Competition;
 
+extern bool keep_vexos_timer;
+
+
 extern bool calibrating;
 extern bool force_calibrate_inertial;
 

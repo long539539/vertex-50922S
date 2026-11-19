@@ -1,4 +1,5 @@
 #include "vex.h"
+#include "motor_temps.h" 
 
 task UI;
 
@@ -11,6 +12,10 @@ static int run_UI() {
 }
 
 void pre_auton() {
+    for (int i = 0; i < 10 && !keep_vexos_timer; i++) {
+        keep_vexos_timer = Competition.isFieldControl() || Competition.isCompetitionSwitch();
+        task::sleep(50);
+    }
     init({
         // Running the auton selector on the controller disables user control,
         // press X on the controller to close auton selector and enable user control
@@ -36,6 +41,7 @@ void auton(void) {
 
 void user_control(void) {
     while (chassis.calibrating) { task::sleep(50); }
+    start_motor_temp_display();
 
     // How you want your drivetrain to stop during driver
     chassis.set_brake_type(brakeType::coast);
@@ -44,6 +50,9 @@ void user_control(void) {
         if (!control_disabled()) {
             // Add your user control code here
             
+            // if (!assembly.anti_tip_step()) {
+            //     chassis.control(drive_mode::SPLIT_ARCADE);
+            // }
             chassis.control(drive_mode::SPLIT_ARCADE);
             assembly.control();
         }

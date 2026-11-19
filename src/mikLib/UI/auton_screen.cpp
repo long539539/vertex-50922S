@@ -7,7 +7,7 @@ using namespace mik;
 using namespace vex;
 
 void UI_auton_screen::queue_autons(bool calibrating, bool set_description) {    
-    if (!calibrating && !set_description && (time_limit || odom_display)) {
+    if (!calibrating && !set_description && (time_limit || odom_display) && !keep_vexos_timer) {
         start_time_limit();
     }
 
@@ -677,7 +677,7 @@ void UI_auton_screen::disable_controller_overlay() {
     controller_scr_input.stop();
     auton_scr->input_overlay = false;
     controller_scr_overlay.stop(); 
-    Controller.Screen.clearScreen();
+    if (!keep_vexos_timer) Controller.Screen.clearScreen();
 }
 
 void UI_auton_screen::enable_controller_overlay() {
@@ -784,7 +784,7 @@ void UI_auton_screen::enable_controller_overlay() {
     
     
     set_previous_selected_auto();
-    restart_controller_overlay();
+    if (!keep_vexos_timer) restart_controller_overlay();
 }
 
 void UI_auton_screen::restart_controller_overlay() {

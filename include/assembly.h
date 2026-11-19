@@ -25,8 +25,16 @@ public:
     void init();
     void control();
 
+    // // ---- Anti-tip  ----
+    // bool   anti_tip_step();    // true = anti-tip is driving the robot this loop
+    // double get_tilt();         // front/back tilt in degrees, + = nose down
+    // void   anti_tip_debug();   // prints pitch/roll/tilt on the controller (setup only)
+
+
     void lift_control();
     void lift_to_stage(int stage, int timeout_ms = 2000);
+    void lift_to_deg(double target_deg, int timeout_ms = 2000); 
+    void lift_auto_step();
     void score_macro(double drop_deg = 60, int timeout_ms = 800);
     void claw_control();
     void claw_spin(double volts, int ms);
