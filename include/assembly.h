@@ -16,7 +16,6 @@ public:
     static mik::motor toggle_motor;
     static mik::piston pto_piston;
     static mik::motor claw_motor;
-    static vex::distance distanceclaw;
 /* Examples of other vex devices you may need */
     static vex::rotation lift_rotation;
     static vex::optical optical_sensor;
@@ -25,11 +24,7 @@ public:
     void init();
     void control();
 
-    // // ---- Anti-tip  ----
-    // bool   anti_tip_step();    // true = anti-tip is driving the robot this loop
-    // double get_tilt();         // front/back tilt in degrees, + = nose down
-    // void   anti_tip_debug();   // prints pitch/roll/tilt on the controller (setup only)
-
+    
 
     void lift_control();
     void lift_to_stage(int stage, int timeout_ms = 2000);
@@ -47,9 +42,7 @@ public:
     static int optical_loop();
    
 private:
-    static vex::task claw_macro_task;
-    static bool claw_macro_grabbed;
-    static int claw_macro_loop();
+    
 
     
 };

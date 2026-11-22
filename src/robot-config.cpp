@@ -8,18 +8,18 @@ vex::controller Controller;
 Chassis chassis(
     // Left drivetrain motors (left/right is looking from behind the robot)
     mik::motor_group({
-        mik::motor(PORT2, true, blue_6_1, "left front motor"), // For holonomic drivetrains, you must include "front" and "back" for the motor names
-        mik::motor(PORT5, true, blue_6_1, "left middle motor"),
-        mik::motor(PORT9, true, green_18_1, "left back motor"),
+        mik::motor(PORT13, true, blue_6_1, "left front motor"), // For holonomic drivetrains, you must include "front" and "back" for the motor names
+        mik::motor(PORT12, true, blue_6_1, "left middle motor"),
+        mik::motor(PORT11, true, green_18_1, "left back motor"),
     }),
     // Right drivetrain motors
     mik::motor_group({
         mik::motor(PORT18, false, blue_6_1, "right front motor"),
-        mik::motor(PORT17, false, blue_6_1, "right middle motor"),
+        mik::motor(PORT19, false, blue_6_1, "right middle motor"),
         mik::motor(PORT20, false, green_18_1, "right back motor"),
     }),
 	
-    PORT15,  // Inertial sensor port
+    PORT16,  // Inertial sensor port
     353.7,    // Inertial scale (rotation reading after a full 360° turn)
 	false,  // Forces inertial sensor to recalibrate until it is within minimum threshold of 0.05 deg for 1 second
 	
@@ -52,26 +52,23 @@ Chassis chassis(
 
 /* Creating a motor group in assembly */
 mik::motor_group Assembly::cascade_motors({
-	mik::motor(PORT8, false, green_18_1, "right_lift"),
-	mik::motor(PORT13, true,green_18_1, "left_lift"),
+	mik::motor(PORT5, false, green_18_1, "right_lift"),
+	mik::motor(PORT1, true,green_18_1, "left_lift"),
 });
 
 /* Creating upper intake motor in assembly */
-mik::motor Assembly::toggle_motor(PORT19, false, green_18_1, "toggle_motor");
+mik::motor Assembly::toggle_motor(PORT4, false, green_18_1, "toggle_motor");
 
 /* Creating pistons in assembly */
-mik::piston Assembly::pto_piston(PORT_F);
-mik::motor Assembly::claw_motor(PORT10, false, green_18_1, "claw_motor");
+mik::piston Assembly::pto_piston(PORT_A);
+mik::motor Assembly::claw_motor(PORT3, false, green_18_1, "claw_motor");
 
 
 /* Creating alternative vex devices in assembly */
-vex::rotation Assembly::lift_rotation(PORT16, false);
-vex::optical Assembly::optical_sensor(PORT3);
-vex::distance Assembly::distanceclaw(PORT11);
+vex::rotation Assembly::lift_rotation(PORT15, false);
+vex::optical Assembly::optical_sensor(PORT0);
 
-vex::task Assembly::claw_macro_task;
 vex::task Assembly::optical_task;
-bool Assembly::claw_macro_grabbed = false;
 bool Assembly::color_stop_on = false;
 
 
